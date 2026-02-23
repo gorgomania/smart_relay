@@ -1,0 +1,36 @@
+<%# app/views/relays/index.html.erb %>
+<div class = "flex flex-col">
+<h1>Управление умным домом Яндекса</h1>
+
+<% if session[:yandex_token].present? %>
+  <%= link_to "Управлять устройствами", button_path, class: "btn btn-primary" %>
+  <%= button_to "Выйти", yandex_logout_path, method: :delete, class: "btn btn-secondary" %>
+<% else %>
+  <%= link_to "Войти через Яндекс", yandex_login_path, class: "btn btn-yandex" %>
+<% end %>
+
+<h1>Управление умными реле</h1>
+
+<% if @relays.present? %>
+  <ul>
+    <% @relays.each do |relay| %>
+      <li>
+        <strong><%= relay['name'] %></strong>
+        (Текущее состояние: 
+          <% if relay['capabilities'] %>
+            <% on_off = relay['capabilities'].find { |c| c['type'] == 'devices.capabilities.on_off' } %>
+            <%= on_off&.dig('state', 'value') ? 'Включено' : 'Выключено' %>
+          <% end %>
+        )
+        
+        <div>
+          <%= button_to "Включить", turn_on_relay_path(relay['id']), method: :post, class: "btn btn-success" %>
+          <%= button_to "Выключить", turn_off_relay_path(relay['id']), method: :post, class: "btn btn-danger" %>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>Устройства не найдены. Проверьте токен или добавьте реле в приложении Яндекса.</p>
+<% end %>
+</div>
