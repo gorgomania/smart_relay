@@ -5,7 +5,6 @@ class YandexAuthController < ApplicationController
     # Параметры приложения из .env
     client_id = ENV["YANDEX_CLIENT_ID"]
     redirect_uri = "https://oauth.yandex.ru/verification_code"
-
     # Формируем URL для перенаправления на Яндекс
     yandex_auth_url = "https://oauth.yandex.ru/authorize?" + {
       response_type: "code",
@@ -13,8 +12,12 @@ class YandexAuthController < ApplicationController
       redirect_uri: redirect_uri,
       scope: "iot:view iot:control"  # Запрашиваем нужные права
     }.to_query
-
-    redirect_to yandex_auth_url, allow_other_host: true
+    render html: """
+      <script>
+        window.open('#{yandex_auth_url}', '_blank');
+        window.location.href = '#{root_path}';
+      </script>
+    """.html_safe
   end
 
   # Это экшен, куда Яндекс вернет пользователя после подтверждения
@@ -37,11 +40,15 @@ class YandexAuthController < ApplicationController
       session[:yandex_token_expires_at] = Time.now + token_data["expires_in"].to_i if token_data["expires_in"]
 
       flash[:notice] = "Успешная авторизация!"
-      redirect_to relays_path
     else
       flash[:alert] = "Не удалось получить токен"
-      redirect_to root_path
     end
+    redirect_to root_path
+  end
+
+  def logout
+    session[:yandex_token] = nil
+    redirect_to root_path, notice: "Вы вышли из системы"
   end
 
   private

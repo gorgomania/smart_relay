@@ -1,4 +1,3 @@
-# app/services/yandex_smart_home_service.rb
 require "net/http"
 require "uri"
 require "json"
