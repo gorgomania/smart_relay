@@ -1,31 +1,35 @@
 <div class = "flex items-center justify-center h-screen ">
   <div class="w-80 bg-white rounded-2xl p-5 flex flex-col items-center">
     <% if session[:yandex_token].present? %>
-      <%= button_to "Выйти", yandex_logout_path, method: :delete, class: "btn btn-secondary" %>
-      <h1>Управление умными реле</h1>
+      <span class = "text-[#333] text-[28px] font-bold text-left w-full">Управление реле</span>
+      <%= flash_messages %>
       <% if @relays.present? %>
-        <ul>
+        <div class = "flex flex-col items-center gap-3 mt-5">
           <% @relays.each do |relay| %>
-            <li>
-              <strong><%= relay['name'] %></strong>
-              (Текущее состояние: 
-              <% if relay['capabilities'] %>
-                <% on_off = relay['capabilities'].find { |c| c['type'] == 'devices.capabilities.on_off' } %>
-                <%= on_off&.dig('state', 'value') ? 'Включено' : 'Выключено' %>
+            <strong class = "text-[24px] text-[#4e4e4e]"><%= relay['name'] %></strong>
+            <%= image_tag root_path + "smart_relay.png", class: "w-60 h-60" %>
+            <% if relay['capabilities'] %>
+              <% on_off = relay['capabilities'].find { |c| c['type'] == 'devices.capabilities.on_off' } %>
+              <% state = on_off&.dig('state', 'value') %>
+            <% end %>
+            <% if state %>
+              <%= button_to turn_off_relay_path(relay['id']), method: :post, class: "rounded-xl w-20 h-20 p-3 hover:bg-[#f2f2f2] cursor-pointer" do %>
+                <%= image_tag root_path + "off.png" %>
               <% end %>
-              )
-              <div>
-                <%= button_to "Включить", turn_on_relay_path(relay['id']), method: :post, class: "btn btn-success" %>
-                <%= button_to "Выключить", turn_off_relay_path(relay['id']), method: :post, class: "btn btn-danger" %>
-              </div>
-            </li>
+            <% else %>
+              <%= button_to turn_on_relay_path(relay['id']), method: :post, class: "rounded-xl w-20 h-20 p-3 hover:bg-[#f2f2f2] cursor-pointer" do %>
+                 <%= image_tag root_path + "on.png" %>
+              <% end %>
+            <% end %>
           <% end %>
-        </ul>
+        </div>
       <% else %>
-        <p>Устройства не найдены. Проверьте токен или добавьте реле в приложении Яндекса.</p>
+        <p>Устройства не найдены. Добавьте реле в приложении Яндекса.</p>
       <% end %>
+      <%= button_to "Выйти", yandex_logout_path, method: :delete, class: "text-[#0d61af] text-base leading-5 mt-5 w-fit cursor-pointer hover:text-[#9330b7]" %>
     <% else %>
-      <span class="text-[#333] text-[22px] font-bold text-left w-full">Аутентификация</span>
+      <span class="text-[#333] text-[28px] font-bold text-left w-full">Авторизация</span>
+      <%= flash_messages %>
       <%= form_tag yandex_callback_path, method: :get do %>
         <div class="field">
           <%= label_tag :code, "Код доступа", class: "relative top-[42px] left-[13px] text-[#8c8c8c] pointer-events-none leading-4"  %>
@@ -36,7 +40,7 @@
         <%= submit_tag "Отправить код", 
           class: "h-16 w-full bg-gradient-to-b from-[#69377c] to-[#8a579f] text-white font-bold rounded-lg mt-5 border-0 cursor-pointer hover:opacity-90" %>
       <% end %>
-      <%= link_to "Получить код доступа", yandex_login_path, class: "text-[#0d61af] text-sm leading-5 mt-5 w-fit cursor-pointer hover:text-[#9330b7]" %>
+      <%= link_to "Получить код доступа", yandex_login_path, class: "text-[#0d61af] text-base leading-5 mt-5 w-fit cursor-pointer hover:text-[#9330b7]" %>
     <% end %>
   </div>
 </div>

@@ -20,7 +20,7 @@ class YandexSmartHomeService
     body = {
       devices: [ {
         id: device_id,
-        capabilities: [ {
+        actions: [ {
           type: "devices.capabilities.on_off",
           state: {
             instance: "on",
@@ -28,7 +28,7 @@ class YandexSmartHomeService
           }
         } ]
       } ]
-    }
+    }.to_json
 
     post_request("/v1.0/devices/actions", body)
   end
@@ -59,17 +59,23 @@ class YandexSmartHomeService
 
   # Вспомогательный метод для POST-запросов
   def post_request(path, body)
-    uri = URI.parse(BASE_URL + path)
-    request = Net::HTTP::Post.new(uri)
-    request["Authorization"] = "Bearer #{@token}"
-    request["Content-Type"] = "application/json"
-    request.body = body.to_json
+    uri = URI.parse("https://api.iot.yandex.net#{path}")
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
 
-    response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
-      http.request(request)
-    end
+    request = Net::HTTP::Post.new(uri.path, {
+      "Authorization" => "Bearer #{@token}",  # Токен доступа
+      "Content-Type" => "application/json"
+    })
 
-    handle_response(response)
+    request.body = body
+    response = http.request(request)
+
+    # Отладка
+    puts "Response code: #{response.code}"
+    puts "Response body: #{response.body}"
+
+    response
   end
 
   # Обработка ответа от API

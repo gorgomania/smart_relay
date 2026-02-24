@@ -38,7 +38,6 @@ class YandexAuthController < ApplicationController
       # Сохраняем токен в сессии
       session[:yandex_token] = token_data["access_token"]
       session[:yandex_token_expires_at] = Time.now + token_data["expires_in"].to_i if token_data["expires_in"]
-
       flash[:notice] = "Успешная авторизация!"
     else
       flash[:alert] = "Не удалось получить токен"
