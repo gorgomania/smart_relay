@@ -10,14 +10,9 @@ class YandexAuthController < ApplicationController
       response_type: "code",
       client_id: client_id,
       redirect_uri: redirect_uri,
-      scope: "iot:view iot:control"  # Запрашиваем нужные права
+      scope: "iot:view iot:control"
     }.to_query
-    render html: """
-      <script>
-        window.open('#{yandex_auth_url}', '_blank');
-        window.location.href = '#{root_path}';
-      </script>
-    """.html_safe
+    redirect_to yandex_auth_url, allow_other_host: true
   end
 
   # Это экшен, куда Яндекс вернет пользователя после подтверждения

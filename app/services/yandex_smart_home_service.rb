@@ -71,9 +71,7 @@ class YandexSmartHomeService
     request.body = body
     response = http.request(request)
 
-    # Отладка
-    puts "Response code: #{response.code}"
-    puts "Response body: #{response.body}"
+    Rails.logger.debug "Yandex API response: #{response.code} #{response.body}"
 
     response
   end
@@ -85,7 +83,7 @@ class YandexSmartHomeService
       JSON.parse(response.body)
     else
       # В реальном приложении здесь стоит использовать Rails.logger
-      puts "Ошибка API Яндекса: #{response.code} - #{response.body}"
+      Rails.logger.error "Yandex API error: #{response.code} #{response.body}"
       nil
     end
   end

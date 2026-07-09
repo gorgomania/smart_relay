@@ -14,11 +14,11 @@
             <% end %>
             <% if state %>
               <%= button_to turn_off_relay_path(relay['id']), method: :post, class: "rounded-xl w-20 h-20 p-3 hover:bg-[#f2f2f2] cursor-pointer" do %>
-                <%= image_tag root_path + "off.png" %>
+                <%= image_tag root_path + "on.png" %>
               <% end %>
             <% else %>
               <%= button_to turn_on_relay_path(relay['id']), method: :post, class: "rounded-xl w-20 h-20 p-3 hover:bg-[#f2f2f2] cursor-pointer" do %>
-                 <%= image_tag root_path + "on.png" %>
+                 <%= image_tag root_path + "off.png" %>
               <% end %>
             <% end %>
           <% end %>

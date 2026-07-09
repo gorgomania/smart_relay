@@ -1,5 +1,7 @@
 class RelaysController < ApplicationController
   before_action :set_yandex_service
+  before_action :require_valid_token
+
   def index
     if session[:yandex_token].present?
       @devices = @yandex_service.get_devices
@@ -22,6 +24,6 @@ class RelaysController < ApplicationController
 
   private
   def set_yandex_service
-      @yandex_service = YandexSmartHomeService.new(session[:yandex_token])
+    @yandex_service = YandexSmartHomeService.new(session[:yandex_token])
   end
 end
