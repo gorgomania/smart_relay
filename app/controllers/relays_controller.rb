@@ -8,14 +8,14 @@ class RelaysController < ApplicationController
   end
 
   def turn_on
-    result = @yandex_service.switch_device(params[:id], turn_on: true)
-    flash[:alert] = "Не удалось включить реле" unless result&.is_a?(Net::HTTPSuccess)
+    error = @yandex_service.switch_device(params[:id], turn_on: true)
+    flash[:alert] = "Не удалось включить реле: #{error}" if error
     redirect_to relays_path
   end
 
   def turn_off
-    result = @yandex_service.switch_device(params[:id], turn_on: false)
-    flash[:alert] = "Не удалось выключить реле" unless result&.is_a?(Net::HTTPSuccess)
+    error = @yandex_service.switch_device(params[:id], turn_on: false)
+    flash[:alert] = "Не удалось выключить реле: #{error}" if error
     redirect_to relays_path
   end
 

@@ -14,23 +14,25 @@ class YandexSmartHomeService
     get_request("/v1.0/user/info")&.dig("devices")
   end
 
-  # Универсальный метод для включения/выключения
   def switch_device(device_id, turn_on: true)
-    # Формируем тело запроса ровно так, как требует документация
     body = {
       devices: [ {
         id: device_id,
         actions: [ {
           type: "devices.capabilities.on_off",
-          state: {
-            instance: "on",
-            value: turn_on # true = включить, false = выключить
-          }
+          state: { instance: "on", value: turn_on }
         } ]
       } ]
     }.to_json
 
-    post_request("/v1.0/devices/actions", body)
+    response = post_request("/v1.0/devices/actions", body)
+    return "Нет соединения с Яндексом" unless response
+
+    data = JSON.parse(response.body)
+    action_result = data.dig("devices", 0, "capabilities", 0, "state", "action_result")
+    return action_result["error_code"] if action_result&.dig("status") == "ERROR"
+
+    nil
   end
 
   private
