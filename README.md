@@ -1,24 +1,43 @@
-# README
+# Smart Relay
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Веб-приложение для управления реле (умными розетками и выключателями) через [Яндекс Умный дом](https://yandex.ru/dev/iot/).
 
-Things you may want to cover:
+## Как это работает
 
-* Ruby version
+1. Пользователь входит через Яндекс OAuth — получает код доступа на сайте Яндекса и вводит его в приложение
+2. Приложение обменивает код на токен и показывает список реле из аккаунта
+3. Реле можно включать и выключать прямо из интерфейса
 
-* System dependencies
+## Требования
 
-* Configuration
+- Ruby 3.3.5
+- Rails 8.0
 
-* Database creation
+## Настройка
 
-* Database initialization
+**1. Создай приложение в Яндекс OAuth**
 
-* How to run the test suite
+Зайди на [oauth.yandex.ru](https://oauth.yandex.ru), создай приложение и запроси права `iot:view` и `iot:control`.
 
-* Services (job queues, cache servers, search engines, etc.)
+**2. Заполни `.env`**
 
-* Deployment instructions
+```
+YANDEX_CLIENT_ID=...
+YANDEX_CLIENT_SECRET=...
+```
 
-* ...
+**3. Установи зависимости и запусти**
+
+```bash
+bundle install
+bin/dev
+```
+
+Приложение будет доступно на `http://localhost:3000`.
+
+## Стек
+
+- Ruby on Rails 8 — бэкенд
+- Tailwind CSS — стили
+- Яндекс Smart Home API — управление устройствами
+- Яндекс OAuth 2.0 — аутентификация
