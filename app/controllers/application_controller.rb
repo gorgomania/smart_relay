@@ -13,6 +13,10 @@ private
     Time.now < Time.parse(expires_at.to_s)
   end
 
+  def redirect_if_authenticated
+    redirect_to relays_path if yandex_token_valid?
+  end
+
   def require_valid_token
     unless session[:yandex_token].present?
       redirect_to yandex_auth_path and return

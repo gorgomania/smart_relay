@@ -1,5 +1,7 @@
 # app/controllers/yandex_auth_controller.rb
 class YandexAuthController < ApplicationController
+  before_action :redirect_if_authenticated, only: :index
+
   def index
   end
   # Это экшен, который перенаправляет пользователя на Яндекс
@@ -22,7 +24,7 @@ class YandexAuthController < ApplicationController
     # Проверяем, не пришла ли ошибка
     if params[:error].present?
       flash[:alert] = "Ошибка авторизации: #{params[:error]}"
-      redirect_to root_path and return
+      redirect_to yandex_auth_path and return
     end
 
     # Получаем код из параметров
@@ -45,7 +47,8 @@ class YandexAuthController < ApplicationController
 
   def logout
     session[:yandex_token] = nil
-    redirect_to root_path, notice: "Вы вышли из системы"
+    session[:yandex_token_expires_at] = nil
+    redirect_to yandex_auth_path, notice: "Вы вышли из системы"
   end
 
   private

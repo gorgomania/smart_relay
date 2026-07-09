@@ -35,36 +35,42 @@ class YandexSmartHomeService
 
   private
 
-  # Вспомогательный метод для GET-запросов
+  TIMEOUT = 10
+
+  NETWORK_ERRORS = [ Net::OpenTimeout, Net::ReadTimeout, Errno::ECONNREFUSED, SocketError ].freeze
+
   def get_request(path)
     uri = URI.parse(BASE_URL + path)
     request = Net::HTTP::Get.new(uri)
     request["Authorization"] = "Bearer #{@token}"
 
-    response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+    response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true, open_timeout: TIMEOUT, read_timeout: TIMEOUT) do |http|
       http.request(request)
     end
 
     handle_response(response)
+  rescue *NETWORK_ERRORS => e
+    Rails.logger.error "Yandex API connection error: #{e.message}"
+    nil
   end
 
-  # Вспомогательный метод для POST-запросов
   def post_request(path, body)
     uri = URI.parse(BASE_URL + path)
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
-
-    request = Net::HTTP::Post.new(uri.path, {
-      "Authorization" => "Bearer #{@token}",  # Токен доступа
-      "Content-Type" => "application/json"
-    })
-
+    request = Net::HTTP::Post.new(uri)
+    request["Authorization"] = "Bearer #{@token}"
+    request["Content-Type"] = "application/json"
     request.body = body
-    response = http.request(request)
+
+    response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true, open_timeout: TIMEOUT, read_timeout: TIMEOUT) do |http|
+      http.request(request)
+    end
 
     Rails.logger.debug "Yandex API response: #{response.code} #{response.body}"
 
     response
+  rescue *NETWORK_ERRORS => e
+    Rails.logger.error "Yandex API connection error: #{e.message}"
+    nil
   end
 
   # Обработка ответа от API

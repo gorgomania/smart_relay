@@ -7,10 +7,8 @@
         <% @relays.each do |relay| %>
           <strong class = "text-[24px] text-[#4e4e4e]"><%= relay['name'] %></strong>
           <%= image_tag "/smart_relay.png", class: "w-60 h-60" %>
-          <% if relay['capabilities'] %>
-            <% on_off = relay['capabilities'].find { |c| c['type'] == 'devices.capabilities.on_off' } %>
-            <% state = on_off&.dig('state', 'value') %>
-          <% end %>
+          <% on_off = relay['capabilities']&.find { |c| c['type'] == 'devices.capabilities.on_off' } %>
+          <% state = on_off&.dig('state', 'value') %>
           <% if state %>
             <%= button_to turn_off_relay_path(relay['id']), method: :post, class: "rounded-xl w-20 h-20 p-3 hover:bg-[#f2f2f2] cursor-pointer" do %>
               <%= image_tag "/on.png" %>

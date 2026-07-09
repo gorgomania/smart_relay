@@ -1,6 +1,6 @@
 class RelaysController < ApplicationController
-  before_action :set_yandex_service
   before_action :require_valid_token
+  before_action :set_yandex_service
 
   def index
     @devices = @yandex_service.get_devices
