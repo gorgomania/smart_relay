@@ -1,5 +1,7 @@
 # app/controllers/yandex_auth_controller.rb
 class YandexAuthController < ApplicationController
+  def index
+  end
   # Это экшен, который перенаправляет пользователя на Яндекс
   def login
     # Параметры приложения из .env
@@ -34,10 +36,11 @@ class YandexAuthController < ApplicationController
       session[:yandex_token] = token_data["access_token"]
       session[:yandex_token_expires_at] = Time.now + token_data["expires_in"].to_i if token_data["expires_in"]
       flash[:notice] = "Успешная авторизация!"
+      redirect_to relays_path and return
     else
       flash[:alert] = "Не удалось получить токен"
+      redirect_to yandex_auth_path
     end
-    redirect_to root_path
   end
 
   def logout

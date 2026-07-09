@@ -33,15 +33,6 @@ class YandexSmartHomeService
     post_request("/v1.0/devices/actions", body)
   end
 
-  # Удобные методы-обертки
-  def turn_on(device_id)
-    switch_device(device_id, turn_on: true)
-  end
-
-  def turn_off(device_id)
-    switch_device(device_id, turn_on: false)
-  end
-
   private
 
   # Вспомогательный метод для GET-запросов
@@ -59,7 +50,7 @@ class YandexSmartHomeService
 
   # Вспомогательный метод для POST-запросов
   def post_request(path, body)
-    uri = URI.parse("https://api.iot.yandex.net#{path}")
+    uri = URI.parse(BASE_URL + path)
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
 

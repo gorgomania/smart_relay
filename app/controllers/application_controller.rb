@@ -14,11 +14,14 @@ private
   end
 
   def require_valid_token
-    return unless session[:yandex_token].present?
-    return if yandex_token_valid?
+    unless session[:yandex_token].present?
+      redirect_to yandex_auth_path and return
+    end
 
-    session[:yandex_token] = nil
-    session[:yandex_token_expires_at] = nil
-    redirect_to root_path, alert: "Сессия истекла, авторизуйтесь снова"
+    unless yandex_token_valid?
+      session[:yandex_token] = nil
+      session[:yandex_token_expires_at] = nil
+      redirect_to yandex_auth_path, alert: "Сессия истекла, авторизуйтесь снова"
+    end
   end
 end
