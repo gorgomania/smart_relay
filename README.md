@@ -1,43 +1,43 @@
 # Smart Relay
 
-Веб-приложение для управления реле (умными розетками и выключателями) через [Яндекс Умный дом](https://yandex.ru/iot/).
+A web application for controlling relays (smart sockets and switches) via [Yandex Smart Home](https://yandex.ru/iot/).
 
-## Как это работает
+## How it works
 
-1. Пользователь входит через Яндекс OAuth — получает код доступа на сайте Яндекса и вводит его в приложение
-2. Приложение обменивает код на токен и показывает список реле из аккаунта
-3. Реле можно включать и выключать прямо из интерфейса
+1. The user signs in via Yandex OAuth — obtains an access code on the Yandex website and enters it into the app
+2. The app exchanges the code for a token and displays the list of relays from the account
+3. Relays can be turned on and off directly from the interface
 
-## Требования
+## Requirements
 
 - Ruby 3.3.5
 - Rails 8.0
 
-## Настройка
+## Setup
 
-**1. Создай приложение в Яндекс OAuth**
+**1. Create an application in Yandex OAuth**
 
-Зайди на [oauth.yandex.ru](https://oauth.yandex.ru), создай приложение и запроси права `iot:view` и `iot:control`.
+Go to [oauth.yandex.ru](https://oauth.yandex.ru), create an application, and request the `iot:view` and `iot:control` permissions.
 
-**2. Заполни `.env`**
+**2. Fill in `.env`**
 
 ```
 YANDEX_CLIENT_ID=...
 YANDEX_CLIENT_SECRET=...
 ```
 
-**3. Установи зависимости и запусти**
+**3. Install dependencies and run**
 
 ```bash
 bundle install
 bin/dev
 ```
 
-Приложение будет доступно на `http://localhost:3000`.
+The application will be available at `http://localhost:3000`.
 
-## Стек
+## Stack
 
-- Ruby on Rails 8 — бэкенд
-- Tailwind CSS — стили
-- Яндекс Smart Home API — управление устройствами
-- Яндекс OAuth 2.0 — аутентификация
+- Ruby on Rails 8 — backend
+- Tailwind CSS — styles
+- Yandex Smart Home API — device control
+- Yandex OAuth 2.0 — authentication
