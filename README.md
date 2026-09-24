@@ -37,9 +37,14 @@ The application will be available at `http://localhost:3000`.
 
 ## Screenshots
 
-| Login | Relay Control | Error |
-|-------|--------------|-------|
-| ![Login](docs/screenshots/login.png) | ![Relay Control](docs/screenshots/manage_relay.png) | ![Relay Error](docs/screenshots/relay_error.png) |
+**Login**
+![Login](docs/screenshots/login.png)
+
+**Relay Control**
+![Relay Control](docs/screenshots/manage_relay.png)
+
+**Relay Error**
+![Relay Error](docs/screenshots/relay_error.png)
 
 ## Stack
 
