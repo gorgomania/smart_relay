@@ -35,6 +35,12 @@ bin/dev
 
 The application will be available at `http://localhost:3000`.
 
+## Screenshots
+
+| Login | Relay Control | Error |
+|-------|--------------|-------|
+| ![Login](docs/screenshots/login.png) | ![Relay Control](docs/screenshots/manage_relay.png) | ![Relay Error](docs/screenshots/relay_error.png) |
+
 ## Stack
 
 - Ruby on Rails 8 — backend
