@@ -1,4 +1,6 @@
-# app/controllers/yandex_auth_controller.rb
+require "net/http"
+require "uri"
+
 class YandexAuthController < ApplicationController
   before_action :redirect_if_authenticated, only: :index
 
