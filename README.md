@@ -10,8 +10,8 @@ A web application for controlling relays (smart sockets and switches) via [Yande
 
 ## Requirements
 
-- Ruby 3.3.5
-- Rails 8.0
+- Ruby 3.3.12
+- Rails 8.1
 
 ## Setup
 
@@ -48,7 +48,7 @@ The application will be available at `http://localhost:3000`.
 
 ## Stack
 
-- Ruby on Rails 8 — backend
+- Ruby on Rails 8.1 — backend
 - Tailwind CSS — styles
 - Yandex Smart Home API — device control
 - Yandex OAuth 2.0 — authentication
