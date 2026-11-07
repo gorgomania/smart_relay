@@ -25,7 +25,9 @@ The token is kept in the session cookie, so the app does not need a database.
 
 **1. Create an application in Yandex OAuth**
 
-Go to [oauth.yandex.ru](https://oauth.yandex.ru), create an application, request the `iot:view` and `iot:control` permissions, and add a Redirect URI for each environment:
+Go to [oauth.yandex.ru](https://oauth.yandex.ru) and create an application of the **For user authorization** type («Для авторизации пользователей»). The type cannot be changed after registration, and an application created for API access may have no Redirect URI setting.
+
+Request the `iot:view` and `iot:control` permissions, select the **Web services** platform («Веб-сервисы»), and add a Redirect URI for each environment:
 
 ```
 http://localhost:3000/auth/yandex/callback
