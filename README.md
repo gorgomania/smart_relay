@@ -78,7 +78,7 @@ The suite has 70 examples:
 
 - Ruby on Rails 8.1 — backend
 - Hotwire Turbo — page navigation
-- Tailwind CSS — styles
+- Tailwind CSS 4 — styles
 - Yandex Smart Home API — device control
 - Yandex OAuth 2.0 — authentication
 - RSpec and WebMock — testing
