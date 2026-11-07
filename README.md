@@ -8,7 +8,7 @@ A web application for controlling relays (smart sockets and switches) via [Yande
 2. The app exchanges the authorization code for a token and displays the list of relays from the account
 3. Relays can be turned on and off directly from the interface
 
-The token is kept in the session cookie, so the app does not need a database.
+The token is kept in the session cookie, so the app does not need a database. Logging out revokes the token at Yandex, so a copied cookie stops working too.
 
 ## Error handling
 
@@ -58,7 +58,7 @@ Tests are written with [RSpec](https://rspec.info/). Requests to Yandex are stub
 bundle exec rspec
 ```
 
-The suite has 70 examples:
+The suite has 79 examples:
 
 - `spec/services` — the Yandex Smart Home API client: responses, device errors, network failures
 - `spec/requests` — relay pages, login and session expiry
