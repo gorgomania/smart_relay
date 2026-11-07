@@ -4,7 +4,6 @@ require "rails"
 require "action_controller/railtie"
 require "action_view/railtie"
 require "action_mailer/railtie"
-require "rails/test_unit/railtie"
 require "sprockets/railtie" if defined?(Sprockets)
 
 # Require the gems listed in Gemfile, including any gems
