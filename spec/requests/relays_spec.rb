@@ -24,6 +24,20 @@ RSpec.describe "Relays", type: :request do
   describe "GET /relays" do
     before { sign_in }
 
+    it "показывает розетки вместе с выключателями" do
+      stub_request(:get, devices_url).to_return(status: 200, body: {
+        devices: [
+          relay,
+          { id: "socket-1", name: "Розетка на кухне", type: "devices.types.socket", capabilities: [ { type: "devices.capabilities.on_off", state: { value: true } } ] }
+        ]
+      }.to_json)
+
+      get relays_path
+
+      expect(response.body).to include("Свет в гараже", "Розетка на кухне")
+      expect(response.body).to include(turn_off_relay_path("socket-1"))
+    end
+
     it "показывает реле и скрывает другие устройства" do
       stub_request(:get, devices_url).to_return(status: 200, body: {
         devices: [ relay, { id: "lamp", name: "Лампа", type: "devices.types.light", capabilities: [] } ]
