@@ -61,7 +61,7 @@ bundle exec rspec
 The suite has 81 examples:
 
 - `spec/services` — the Yandex Smart Home API client: responses, device errors, network failures
-- `spec/requests` — relay pages, login and session expiry
+- `spec/requests` — relay pages, login, logout and session expiry
 
 ## Screenshots
 
