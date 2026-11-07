@@ -1,5 +1,6 @@
 require "net/http"
 require "uri"
+require "json"
 
 class YandexAuthController < ApplicationController
   before_action :redirect_if_authenticated, only: :index
@@ -66,13 +67,23 @@ class YandexAuthController < ApplicationController
       client_secret: ENV["YANDEX_CLIENT_SECRET"]
     }
 
-    response = Net::HTTP.post_form(uri, params)
+    request = Net::HTTP::Post.new(uri)
+    request.set_form_data(params)
+
+    timeout = YandexSmartHomeService::TIMEOUT
+    response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true, open_timeout: timeout, read_timeout: timeout) do |http|
+      http.request(request)
+    end
 
     if response.is_a?(Net::HTTPSuccess)
-      JSON.parse(response.body)
+      JSON.parse(response.body.to_s)
     else
-      Rails.logger.error("Yandex token exchange failed: #{response.body}")
+      Rails.logger.error("Yandex token exchange failed: #{response.code} #{response.body}")
       nil
     end
+  rescue *YandexSmartHomeService::NETWORK_ERRORS, JSON::ParserError => e
+    # Только класс ошибки: текст JSON::ParserError содержит часть тела ответа
+    Rails.logger.error("Yandex token exchange failed: #{e.class}")
+    nil
   end
 end
