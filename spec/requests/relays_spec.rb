@@ -1,4 +1,5 @@
 require "rails_helper"
+require "support/yandex_auth_helpers"
 
 RSpec.describe "Relays", type: :request do
   include ActiveSupport::Testing::TimeHelpers
@@ -15,12 +16,6 @@ RSpec.describe "Relays", type: :request do
   end
   let(:not_found_text) { "Устройства не найдены" }
   let(:expired_text) { "Сессия истекла, авторизуйтесь снова" }
-
-  # Вход через настоящий callback: сессию в request-спеках напрямую не задать
-  def sign_in(token_response = { access_token: "test-token", expires_in: 3600 })
-    stub_request(:post, "https://oauth.yandex.ru/token").to_return(status: 200, body: token_response.to_json)
-    get yandex_callback_path, params: { code: "123" }
-  end
 
   def stub_action(status: 200, body: { devices: [] }.to_json)
     stub_request(:post, actions_url).to_return(status: status, body: body)
