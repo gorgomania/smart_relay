@@ -3,8 +3,8 @@
     <span class="text-[#333] text-[28px] font-bold text-left w-full">Авторизация</span>
         <%= flash_messages %>
         <%= form_tag yandex_callback_path, method: :get do %>
-        <div class="field">
-            <%= label_tag :code, "Код доступа", class: "relative top-[42px] left-[13px] text-[#8c8c8c] pointer-events-none leading-4"  %>
+        <div class="field group">
+            <%= label_tag :code, "Код доступа", class: "relative top-[42px] left-[13px] text-[#8c8c8c] pointer-events-none leading-4 transition-[top,font-size] duration-250 group-has-[input:focus]:top-[22px] group-has-[input:focus]:text-[13px] group-has-[input:valid]:top-[22px] group-has-[input:valid]:text-[13px]"  %>
             <%= text_field_tag :code, nil, 
             class: "auth_input w-[280px] px-3 rounded-lg border border-[#e5e5e5] h-[64px] bg-[#f2f2f2] outline-none hover:bg-[#e8e8e8] focus:bg-white focus:shadow-[0_0_0_1px_#0000000a,0_4px_4px_#0000000a,0_20px_40px_#00000014]",
             required: true %>
