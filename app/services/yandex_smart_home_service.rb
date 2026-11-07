@@ -16,6 +16,22 @@ class YandexSmartHomeService
   # SystemCallError — все Errno::*, IOError — EOFError
   NETWORK_ERRORS = [ Timeout::Error, SocketError, SystemCallError, IOError, OpenSSL::SSL::SSLError ].freeze
 
+  # Коды и формулировки из документации Яндекса; прочие коды показываются как есть
+  DEVICE_ERRORS = {
+    "ACCOUNT_LINKING_ERROR" => "Ошибка в OAuth2 токене пользователя",
+    "DEVICE_BUSY" => "Устройство занято",
+    "DEVICE_NOT_FOUND" => "Устройство не найдено",
+    "DEVICE_OFF" => "Устройство выключено",
+    "DEVICE_UNREACHABLE" => "Устройство недоступно",
+    "FIRMWARE_OUT_OF_DATE" => "Прошивка устарела",
+    "HUMAN_INVOLVEMENT_NEEDED" => "Требуется вмешательство человека",
+    "INTERNAL_ERROR" => "Неизвестная внутренняя ошибка",
+    "INVALID_ACTION" => "Недопустимое действие",
+    "INVALID_VALUE" => "Недопустимое значение",
+    "NOT_SUPPORTED_IN_CURRENT_MODE" => "Не поддерживается в текущем режиме работы устройства",
+    "REMOTE_CONTROL_DISABLED" => "Удаленное управление устройством отключено"
+  }.freeze
+
   def initialize(token)
     @token = token
   end
@@ -43,10 +59,16 @@ class YandexSmartHomeService
 
     data = perform(request)
     action_result = data.dig("devices", 0, "capabilities", 0, "state", "action_result")
-    raise Error, action_result["error_code"] if action_result&.dig("status") == "ERROR"
+    raise Error, device_error_message(action_result) if action_result&.dig("status") == "ERROR"
   end
 
   private
+
+  def device_error_message(action_result)
+    code = action_result["error_code"]
+
+    DEVICE_ERRORS.fetch(code) { action_result["error_message"].presence || code.presence || "Неизвестная ошибка устройства" }
+  end
 
   def perform(request)
     request["Authorization"] = "Bearer #{@token}"

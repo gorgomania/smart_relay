@@ -65,11 +65,32 @@ RSpec.describe YandexSmartHomeService do
       end
     end
 
-    it "бросает Error с кодом ошибки устройства" do
+    it "переводит код ошибки устройства в понятный текст" do
       stub_request(:post, actions_url)
         .to_return(status: 200, body: action_response(status: "ERROR", error_code: "DEVICE_UNREACHABLE"))
 
-      expect { service.switch_device("relay-1") }.to raise_error(described_class::Error, "DEVICE_UNREACHABLE")
+      expect { service.switch_device("relay-1") }.to raise_error(described_class::Error, "Устройство недоступно")
+    end
+
+    it "для неизвестного кода показывает error_message из ответа" do
+      stub_request(:post, actions_url).to_return(status: 200, body: action_response(
+        status: "ERROR", error_code: "SOME_NEW_CODE", error_message: "Текст от Яндекса"
+      ))
+
+      expect { service.switch_device("relay-1") }.to raise_error(described_class::Error, "Текст от Яндекса")
+    end
+
+    it "для неизвестного кода без error_message показывает сам код" do
+      stub_request(:post, actions_url)
+        .to_return(status: 200, body: action_response(status: "ERROR", error_code: "SOME_NEW_CODE"))
+
+      expect { service.switch_device("relay-1") }.to raise_error(described_class::Error, "SOME_NEW_CODE")
+    end
+
+    it "без кода и текста показывает общее сообщение" do
+      stub_request(:post, actions_url).to_return(status: 200, body: action_response(status: "ERROR"))
+
+      expect { service.switch_device("relay-1") }.to raise_error(described_class::Error, "Неизвестная ошибка устройства")
     end
 
     it "бросает UnauthorizedError при 401" do

@@ -96,7 +96,7 @@ RSpec.describe "Relays", type: :request do
         expect(flash[:alert]).to be_nil
       end
 
-      it "показывает код ошибки устройства" do
+      it "показывает понятный текст ошибки устройства" do
         stub_action(body: {
           devices: [ { capabilities: [ { state: { action_result: { status: "ERROR", error_code: "DEVICE_UNREACHABLE" } } } ] } ]
         }.to_json)
@@ -104,7 +104,7 @@ RSpec.describe "Relays", type: :request do
         post path
         follow_redirect!
 
-        expect(response.body).to include("Не удалось #{verb} реле: DEVICE_UNREACHABLE")
+        expect(response.body).to include("Не удалось #{verb} реле: Устройство недоступно")
       end
 
       it "показывает ошибку при таймауте" do
