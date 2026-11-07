@@ -20,7 +20,7 @@
           <% end %>
         <% end %>
       </div>
-    <% else %>
+    <% elsif @relays %>
       <p>Устройства не найдены. Добавьте реле в приложении Яндекса.</p>
     <% end %>
     <%= button_to "Выйти", yandex_logout_path, method: :delete, class: "text-[#0d61af] text-base leading-5 mt-5 w-fit cursor-pointer hover:text-[#9330b7]" %>

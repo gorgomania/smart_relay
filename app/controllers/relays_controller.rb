@@ -2,25 +2,35 @@ class RelaysController < ApplicationController
   before_action :require_valid_token
   before_action :set_yandex_service
 
+  rescue_from YandexSmartHomeService::UnauthorizedError, with: :expire_yandex_session
+
   def index
-    @devices = @yandex_service.get_devices
-    @relays = @devices&.select { |d| d["type"] == "devices.types.switch" }
+    devices = @yandex_service.get_devices
+    @relays = devices.select { |d| d["type"] == "devices.types.switch" }
+  rescue YandexSmartHomeService::Error => e
+    flash.now[:alert] = "Не удалось загрузить список реле: #{e.message}"
   end
 
   def turn_on
-    error = @yandex_service.switch_device(params[:id], turn_on: true)
-    flash[:alert] = "Не удалось включить реле: #{error}" if error
-    redirect_to relays_path
+    switch_relay(turn_on: true, failure_message: "Не удалось включить реле")
   end
 
   def turn_off
-    error = @yandex_service.switch_device(params[:id], turn_on: false)
-    flash[:alert] = "Не удалось выключить реле: #{error}" if error
-    redirect_to relays_path
+    switch_relay(turn_on: false, failure_message: "Не удалось выключить реле")
   end
 
   private
   def set_yandex_service
     @yandex_service = YandexSmartHomeService.new(session[:yandex_token])
+  end
+
+  def switch_relay(turn_on:, failure_message:)
+    begin
+      @yandex_service.switch_device(params[:id], turn_on: turn_on)
+    rescue YandexSmartHomeService::Error => e
+      flash[:alert] = "#{failure_message}: #{e.message}"
+    end
+
+    redirect_to relays_path
   end
 end

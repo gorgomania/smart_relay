@@ -22,10 +22,12 @@ private
       redirect_to yandex_auth_path and return
     end
 
-    unless yandex_token_valid?
-      session[:yandex_token] = nil
-      session[:yandex_token_expires_at] = nil
-      redirect_to yandex_auth_path, alert: "Сессия истекла, авторизуйтесь снова"
-    end
+    expire_yandex_session unless yandex_token_valid?
+  end
+
+  def expire_yandex_session
+    session[:yandex_token] = nil
+    session[:yandex_token_expires_at] = nil
+    redirect_to yandex_auth_path, alert: "Сессия истекла, авторизуйтесь снова"
   end
 end
