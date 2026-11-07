@@ -11,7 +11,8 @@ class RelaysController < ApplicationController
     devices = @yandex_service.get_devices
     @relays = devices.select { |d| RELAY_TYPES.include?(d["type"]) }
   rescue YandexSmartHomeService::Error => e
-    flash.now[:alert] = "Не удалось загрузить список реле: #{e.message}"
+    # Свой ключ, чтобы не затереть ошибку переключения, пришедшую с редиректом
+    flash.now[:list_alert] = "Не удалось загрузить список реле: #{e.message}"
   end
 
   def turn_on

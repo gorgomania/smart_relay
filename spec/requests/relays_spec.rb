@@ -141,6 +141,19 @@ RSpec.describe "Relays", type: :request do
         expect(flash[:alert]).to eq("Не удалось #{verb} реле: Яндекс вернул ошибку 502")
       end
 
+      it "показывает обе ошибки, если после сбоя переключения не загрузился и список" do
+        stub_request(:post, actions_url).to_timeout
+        stub_request(:get, devices_url).to_timeout
+
+        post path
+        follow_redirect!
+
+        switch_error = "Не удалось #{verb} реле: Нет соединения с Яндексом"
+        list_error = "Не удалось загрузить список реле: Нет соединения с Яндексом"
+        expect(response.body).to include(switch_error, list_error)
+        expect(response.body.index(switch_error)).to be < response.body.index(list_error)
+      end
+
       it "при 401 сбрасывает сессию и отправляет на вход" do
         stub_action(status: 401, body: "{}")
 

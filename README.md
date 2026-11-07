@@ -58,7 +58,7 @@ Tests are written with [RSpec](https://rspec.info/). Requests to Yandex are stub
 bundle exec rspec
 ```
 
-The suite has 79 examples:
+The suite has 81 examples:
 
 - `spec/services` — the Yandex Smart Home API client: responses, device errors, network failures
 - `spec/requests` — relay pages, login and session expiry
